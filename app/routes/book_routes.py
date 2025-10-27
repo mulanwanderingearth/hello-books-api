@@ -23,9 +23,16 @@ def create_book():
 
 @books_bp.get("")
 def get_all_book():
-    query = db.select(Book).order_by(Book.id)
-    books = db.session.scalars(query)
+    title_param = request.args.get("title")
+    if title_param:
+        query = db.select(Book).where(Book.title.ilike(f"%{title_param}%"))
+    
+    description_param = request.args.get("description")
+    if description_param:
+        query = db.select(Book).where(Book.description.ilike(f"%{description_param}%"))
 
+    books = db.session.scalars(query.order_by(Book.id))
+    
     books_response = []
     for book in books:
         books_response.append(
@@ -36,6 +43,27 @@ def get_all_book():
             }
         )
     return books_response
+
+# @books_bp.get("")
+# def get_quaery_param():
+#     title_param = request.args.get("query_param_key")
+#     if title_param:
+#         query = db.select(Book).where(Book.title.ilike(f"%{title_param}%").order_by(Book.id) )
+#     else:
+#         query = db.select(Book).order_by(Book.id)
+
+#     books = db.session.scalars(query)
+    
+#     books_response = []
+#     for book in books:
+#         books_response.append(
+#             {
+#                 "id": book.id,
+#                 "title": book.title,
+#                 "description": book.description
+#             }
+#         )
+#     return books_response
 
 @books_bp.get("/<book_id>")
 def get_one_book(book_id):
