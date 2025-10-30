@@ -23,6 +23,7 @@ def create_book():
 
 @books_bp.get("")
 def get_all_book():
+    query = db.select(Book)
     title_param = request.args.get("title")
     if title_param:
         query = db.select(Book).where(Book.title.ilike(f"%{title_param}%"))
@@ -43,7 +44,8 @@ def get_all_book():
             }
         )
     return books_response
-
+    
+    
 # @books_bp.get("")
 # def get_quaery_param():
 #     title_param = request.args.get("query_param_key")
@@ -87,7 +89,7 @@ def validate_book(book_id):
 
     if not book:
         response = {"message": f"book {book_id} not found"}
-        abort(make_response(response, 400))
+        abort(make_response(response, 404))
 
     return book
 
