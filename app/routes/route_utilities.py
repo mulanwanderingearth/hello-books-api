@@ -15,3 +15,5 @@ def validate_models(cls, model_id):
         abort(make_response(response, 404))
 
     return model
+
+# def create_model(cls, model_data)
