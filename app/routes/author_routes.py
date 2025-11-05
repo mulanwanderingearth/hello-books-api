@@ -33,7 +33,7 @@ def create_author():
 
 @bp.post("/<author_id>/books")
 def create_book_with_author(author_id):
-    author = validate_model(Author, author_id)
+    author = validate_models(Author, author_id)
     
     request_body = request.get_json()
     request_body["author_id"] = author.id
@@ -52,16 +52,16 @@ def create_book_with_author(author_id):
 
 @bp.get("/<author_id>/books")
 def get_books_by_author(author_id):
-    author = validate_model(Author, author_id)
+    author = validate_models(Author, author_id)
     # query = db.select(Book).where(Book.author_id == author_id)
     # books = db.session.scalars(query)
     return [book.to_dict() for book in author.books]
 
 @bp.put("/<author_id>/books")
 def update_book_by_author(author_id):
-    author = validate_model(Author, author_id)
+    author = validate_models(Author, author_id)
     request_body = request.get_json()
-    query = db.select(author.books).where(author_id = author_id)
+    query = db.select(author.books).where(author_id == author_id)
     new_book = db.session.scalar(query)
     from_dict(Book, request_body)
 
